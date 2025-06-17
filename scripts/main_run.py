@@ -41,7 +41,7 @@ def main():
         help='Type of motion behavior to execute.',
         type=str,
         choices=['stand'],
-        default='walk'
+        default='stand'
     )
     args = parser.parse_args()
 
@@ -53,50 +53,6 @@ def main():
 
     motion_fn = motion_dispatch.get(args.motion, controller.stand)
     motion_fn()
-
-    left_leg_joint_values = np.array(controller.biped.left_leg_joints_value_logs)
-    right_leg_joint_values = np.array(controller.biped.right_leg_joints_value_logs)
-
-    plt.figure(figsize=(12, 8))  # Adjust size as needed
-
-    # Plot 1
-    plt.subplot(2, 2, 1)
-    plt.plot(CoM_x_list, label='CoM_x')
-    plt.plot(ZMP_x_list, label='ZMP_x')
-    plt.xlabel('Time Step')
-    plt.ylabel('X Position')
-    plt.title('CoM_x and ZMP_x over Time')
-    plt.legend()
-
-    # Plot 2
-    plt.subplot(2, 2, 2)
-    plt.plot(CoM_y_list, label='CoM_y')
-    plt.plot(ZMP_y_list, label='ZMP_y')
-    plt.xlabel('Time Step')
-    plt.ylabel('Y Position')
-    plt.title('CoM_y and ZMP_y over Time')
-    plt.legend()
-
-    # Plot 3
-    plt.subplot(2, 2, 3)
-    for i in range(6):
-        plt.plot(left_leg_joint_values[:, i], label=f'Joint {i+1}')
-    plt.xlabel('Time Step')
-    plt.ylabel('Joint Value')
-    plt.title('Left Leg Joint Positions over Time')
-    plt.legend()
-
-    # Plot 4
-    plt.subplot(2, 2, 4)
-    for i in range(6):
-        plt.plot(right_leg_joint_values[:, i], label=f'Joint {i+1}')
-    plt.xlabel('Time Step')
-    plt.ylabel('Joint Value')
-    plt.title('Right Leg Joint Positions over Time')
-    plt.legend()
-
-    plt.tight_layout()
-    plt.show()
 
 if __name__ == "__main__":
     main()
