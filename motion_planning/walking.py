@@ -275,6 +275,20 @@ class PreviewControl:
         return CoM_trajectory, leftTrj, rightTrj
 
     def targetZMP_generator(self, targetZMP, targetZMP_old, Tsup, Tdl):
+    	"""
+        Generates a smooth reference ZMP (Zero Moment Point) trajectory over a gait cycle 
+        consisting of a double support phase (Tdl) followed by a single support phase (Tsup).
+
+        Args:
+            targetZMP (np.ndarray): Desired ZMP position for the next support footstep (x, y).
+            targetZMP_old (np.ndarray): Previous ZMP position from the last step (x, y).
+            Tsup (int): Duration of the single support phase (in control steps).
+            Tdl (int): Duration of the double support phase (in control steps).
+
+        Returns:
+            px_ref (np.ndarray): Reference ZMP trajectory in the x-direction for Tdl + Tsup steps.
+            py_ref (np.ndarray): Reference ZMP trajectory in the y-direction for Tdl + Tsup steps.
+        """
         tdl_t = np.arange(0, Tdl)
 
         x_a = (targetZMP_old[0] - targetZMP[0]) / (0 - Tdl)
