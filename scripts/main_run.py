@@ -38,6 +38,27 @@ class BipedMotionController:
             self.biped.set_leg_positions(self.targetPosL, self.targetPosR, self.targetRPY)
             self.biped.env.step()
     
+    def squat(self):
+    	"""
+    	Performs a squatting motion by vertically oscillating both legs' positions.
+    	"""
+        self.biped.initialize_position(init_time=0.1)
+        dp = 0.002 # Step size
+
+        while True:
+            self._update_incline()
+            for _ in range(100):
+                self.biped.set_leg_positions(self.targetPosL, self.targetPosR, self.targetRPY)
+                self.biped.env.step()
+                self.targetPosL[2] += dp
+                self.targetPosR[2] += dp
+
+            for _ in range(100):
+                self.biped.set_leg_positions(self.targetPosL, self.targetPosR, self.targetRPY)
+                self.biped.env.step()
+                self.targetPosL[2] -= dp
+                self.targetPosR[2] -= dp
+        
     def walk(self):
         """
         Executes a dynamic walking cycle for the biped robot using preview control.
@@ -108,7 +129,7 @@ def main():
         '--motion',
         help='Type of motion behavior to execute.',
         type=str,
-        choices=['stand', 'walk'],
+        choices=['stand', 'squat', 'walk'],
         default='stand'
     )
     args = parser.parse_args()
@@ -117,6 +138,7 @@ def main():
 
     motion_dispatch = {
         'stand': controller.stand,
+        'squat': controller.squat,
         'walk': controller.walk,
     }
 
